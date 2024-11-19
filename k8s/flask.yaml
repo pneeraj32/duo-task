@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
+  name: flask-service
 spec:
   type: LoadBalancer
   selector:
-    app: nginx
+    app: flask
   ports:
     - protocol: TCP
       port: 5500
@@ -14,12 +14,12 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx
+  name: flask
   labels:
-    app: nginx
+    app: flask
 spec:
   containers:
-    - name: nginx-container
+    - name: flask-container
       image: neeraj870/dup-task
       ports:
         - containerPort: 5500
