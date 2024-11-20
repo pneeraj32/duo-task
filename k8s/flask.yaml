@@ -5,6 +5,10 @@ metadata:
   labels:
     app: flask
 spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 20%
   replicas: 20
   selector:
     matchLabels:
@@ -17,6 +21,7 @@ spec:
       containers:
         - name: flask-container
           image: neeraj870/dup-task:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5500
 ---
