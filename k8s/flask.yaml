@@ -9,7 +9,7 @@ spec:
     rollingUpdate:
       maxSurge: 20%
       maxUnavailable: 20%
-  replicas: 20
+  replicas: 10
   selector:
     matchLabels:
       app: flask
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: flask-container
-          image: neeraj870/dup-task:latest
+          image: neeraj870/duo-jenk:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5500
