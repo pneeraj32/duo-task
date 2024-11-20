@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-container
-          image: stratcastor/duo-flask:latest
+          image: neeraj870/dup-task:latest
           ports:
             - containerPort: 5500
 ---
