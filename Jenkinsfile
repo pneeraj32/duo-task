@@ -3,21 +3,21 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                script{
-                    if(env.GIT_BRANCH == 'origin/main'){
+                script {
+                    if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        kubectl create ns prod || echo "------Prod Namespace Already Exists-------"
+                        kubectl create ns prod || echo "------- Prod Namespace Already Exists -------"
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        kubectl create ns dev || echo "--------Dev Namespace Already Exists"
+                        kubectl create ns dev || echo "------- Prod Namespace Already Exists -------"
                         '''
                     } else {
-                        sh'echo "Unrecognised branch"'
+                        sh'echo "Unrecogognised branch"'
                     }
                 }
             }
-        }      
+        }
         stage('Build') {
             steps {
                 script {
@@ -30,7 +30,7 @@ pipeline {
                         docker build -t stratcastor/duo-jenk:latest -t stratcastor/duo-jenk:v${BUILD_NUMBER} .
                         '''
                     } else {
-                        sh'echo "Unrecognised branch"'
+                        sh'echo "Unrecogognised branch"'
                     }
                 }
             }
@@ -40,35 +40,35 @@ pipeline {
                 script {
                     if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        docker push neeraj870/duo-jenk:latest
-                        docker push neeraj870/duo-jenk:v${BUILD_NUMBER}
+                        docker push stratcastor/duo-jenk:latest
+                        docker push stratcastor/duo-jenk:v${BUILD_NUMBER}
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        docker push neeraj870/duo-jenk:latest
-                        docker push neeraj870/duo-jenk:v${BUILD_NUMBER}
+                        docker push stratcastor/duo-jenk:latest
+                        docker push stratcastor/duo-jenk:v${BUILD_NUMBER}
                         '''
                     } else {
-                        sh'echo "Unrecognised branch"'
+                        sh'echo "Unrecogognised branch"'
                     }
-                }    
+                }
             }
         }
         stage('Deploy') {
             steps {
                 script {
                     if (env.GIT_BRANCH == 'origin/main') {
-                        sh '''
-                        kubectl apply -f ./k8s
-                        kubectl set image deployment/flask-deployment flask-container=neeraj870/duo-jenk:v${BUILD_NUMBER}
+                        sh'''
+                        kubectl apply -f ./kubernetes -n prod
+                        kubectl set image deployment/flask-deployment flask-container=stratcastor/duo-jenk:v${BUILD_NUMBER} -n prod
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh'''
-                        kubectl apply -f ./k8s
-                        kubectl set image deployment/flask-deployment flask-container=neeraj870/duo-jenk:v${BUILD_NUMBER}
+                        kubectl apply -f ./kubernetes -n dev
+                        kubectl set image deployment/flask-deployment flask-container=stratcastor/duo-jenk:v${BUILD_NUMBER} -n dev
                         '''
                     } else {
-                        sh'echo "Unrecognised branch"'
+                        sh'echo "Unrecogognised branch"'
                     }
                 }
             }
